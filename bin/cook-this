@@ -1,0 +1,5 @@
+#!/usr/bin/env ruby
+
+require_relative '../lib/cook-this-recipe'
+
+CookThisRecipe::Cli.new.call
