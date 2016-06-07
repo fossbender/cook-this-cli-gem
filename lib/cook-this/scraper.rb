@@ -33,9 +33,21 @@ class CookThisRecipe::Scraper
     category_array = []
     source = Nokogiri::HTML(open(category_page))
 
-    source.css('#grid article a h3').each do |recipe|
-      puts recipe.text
+    source.css('#grid article a[data-internal-referrer-link="hub recipe"]').each do |recipe|
+      name = recipe.css('h3').text.gsub( /\r\n/m, '' ).strip
+      if name != ''
+        category_url = 'http://allrecipes.com' + recipe.attribute('href').text
+        category_hash={ name: name, category_url: category_url}
+        category_array << category_hash
+      end
     end
+
+    category_array
+  end
+
+  def grab_recipe(index_url)
+    puts "now scraping #{index_url}"
+
   end
 
 

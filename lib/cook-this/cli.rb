@@ -1,5 +1,5 @@
 class CookThisRecipe::Cli
-  
+
   attr_accessor :categories, :choice, :recipes
   attr_reader :flag
 
@@ -8,9 +8,11 @@ class CookThisRecipe::Cli
     @flag = true
     puts 'Let\'s find some recipes!'
     user_choice
+    print_categories
+    scrape_recipe
   end
 
-  #while there are still more than 5 categories to drill down, keep listing them and scraping
+  #while there are still more than 3 categories to drill down, keep listing them and scraping
   def user_choice
     while flag
       print_categories
@@ -25,25 +27,32 @@ class CookThisRecipe::Cli
       puts "#{count}. #{category[:name]}"
       count += 1
     end
-    puts 'Enter the number for the category of recipe you\'re interested in:'
   end
 
 
   def get_category_choice
+    puts 'Enter the number of the item that interests you'
     @choice = gets.strip.to_i-1
     categories[choice][:category_url]
   end
 
+
   def scrape_category_page
     temp = CookThisRecipe::Scraper.new.scrape_category_page(get_category_choice)
-    temp.count > 5 ? @categories = temp : list_recipes
+    temp.count > 3 ? @categories = temp : list_recipes
   end
+
+
+  def scrape_recipe
+    CookThisRecipe::Scraper.new.grab_recipe(get_category_choice)
+  end
+
 
   def list_recipes
     @flag = false
     @recipes = categories[choice][:category_url]
     puts "Now listing individual recipes found on the following page: #{recipes}"
-    CookThisRecipe::Scraper.new.scrape_recipe_page(recipes)
+    @categories = CookThisRecipe::Scraper.new.scrape_recipe_page(recipes)
   end
 
 
