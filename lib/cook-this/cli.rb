@@ -9,7 +9,7 @@ class CookThisRecipe::Cli
     puts 'Let\'s find some recipes!'
     user_choice
     print_categories
-    scrape_recipe
+    grab_recipe
   end
 
   #while there are still more than 3 categories to drill down, keep listing them and scraping
@@ -34,6 +34,7 @@ class CookThisRecipe::Cli
     puts 'Enter the number of the item that interests you'
     @choice = gets.strip.to_i-1
     categories[choice][:category_url]
+
   end
 
 
@@ -43,17 +44,18 @@ class CookThisRecipe::Cli
   end
 
 
-  def scrape_recipe
-    CookThisRecipe::Scraper.new.grab_recipe(get_category_choice)
-  end
-
-
   def list_recipes
     @flag = false
     @recipes = categories[choice][:category_url]
     puts "Now listing individual recipes found on the following page: #{recipes}"
     @categories = CookThisRecipe::Scraper.new.scrape_recipe_page(recipes)
+
   end
+
+  def grab_recipe
+    CookThisRecipe::Scraper.new.build_recipe(get_category_choice)
+  end
+
 
 
 end
