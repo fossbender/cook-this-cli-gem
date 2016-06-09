@@ -40,13 +40,10 @@ class CookThisRecipe::Scraper
         category_array << category_hash
       end
     end
-
     category_array
   end
 
   def build_recipe(index_url)
-    #source = Nokogiri::HTML(open(index_url))
-    #CookThisRecipe::Recipe.new_recipe(source)
     CookThisRecipe::Recipe.new_recipe(Nokogiri::HTML(open(index_url)))
   end
 
